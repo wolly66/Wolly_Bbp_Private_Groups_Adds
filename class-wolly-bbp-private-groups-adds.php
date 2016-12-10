@@ -34,6 +34,7 @@ class Wolly_Bbp_Private_Groups_Adds{
 	var $group = '';
 	var $group_prefix = '';
 	var $user_meta_name = '';
+	var $errors = array();
 
 
 	/**
@@ -84,7 +85,7 @@ class Wolly_Bbp_Private_Groups_Adds{
 		if ( false == $this->user_id || false == $this->group )
 			return;
 
-		$user_meta = get_user_meta( $this->id_user, $this->user_meta_name, true );
+		$user_meta = get_user_meta( $this->user_id, $this->user_meta_name, true );
 
 		if ( ! empty( $user_meta) ){
 
@@ -104,7 +105,7 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 					}
 
-					update_user_meta( $this->id_user, $this->user_meta_name, $new_groups );
+					update_user_meta( $this->user_id, $this->user_meta_name, $new_groups );
 				}
 			}
 
@@ -116,7 +117,7 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 			$new_groups = '*' . $this->group . '*';
 
-			update_user_meta( $this->id_user, $this->user_meta_name, $new_groups );
+			update_user_meta( $this->user_id, $this->user_meta_name, $new_groups );
 		}
 	}
 
@@ -136,7 +137,7 @@ class Wolly_Bbp_Private_Groups_Adds{
 		if ( false == $this->user_id || false == $this->group )
 			return;
 
-		$user_meta = get_user_meta( $this->id_user, $this->user_meta_name, true );
+		$user_meta = get_user_meta( $this->user_id, $this->user_meta_name, true );
 
 		if ( ! empty( $user_meta) ){
 
@@ -158,11 +159,11 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 					}
 
-					update_user_meta( $this->id_user, $this->user_meta_name, $new_groups );
+					update_user_meta( $this->user_id, $this->user_meta_name, $new_groups );
 
-				} else {
+				} elseif  ( in_array( $this->group, $explode ) && count( $explode ) == 1 ){
 
-					delete_user_meta( $this->id_user, $this->user_meta_name );
+					delete_user_meta( $this->user_id, $this->user_meta_name );
 				}
 			}
 
@@ -182,8 +183,10 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 		$this->user_id = false;
 
-		if ( ! is_numeric( $user_id ) )
-			return;
+		if ( ! is_numeric( $user_id ) ){
+			$this->errors[] = '$user_id is not numeric';
+			return $this->errors;
+		}
 
 		$this->user_id = (int) $user_id;
 
@@ -201,17 +204,25 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 		$this->group = false;
 
-		if ( ! is_string( $group ) )
-			return;
+		if ( ! is_string( $group ) ){
+			$this->errors[] = '$group is not a string';
+			return $this->errors;
+		}
 
-		if ( 6 > strlen( $group ) )
-			return;
+		if ( 6 > strlen( $group ) ){
+			$this->errors[] = '$group is too short';
+			return $this->errors;
+		}
 
-		if ( substr( strtolower( $group ), 0, 5 ) != $this->group_prefix )
-			return;
+		if ( substr( strtolower( $group ), 0, 5 ) != $this->group_prefix ){
+			$this->errors[] = '$group prefix is not group';
+			return $this->errors;
+		}
 
-		if ( ! is_numeric( substr( $group, 5 ) ) )
-			return;
+		if ( ! is_numeric( substr( $group, 5 ) ) ){
+			$this->errors[] = '$group suffix is not numeric';
+			return $this->errors;
+		}
 
 		$this->group = strtolower( $group );
 
