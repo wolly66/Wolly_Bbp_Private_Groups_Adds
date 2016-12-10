@@ -185,7 +185,7 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 		if ( ! is_numeric( $user_id ) ){
 			$this->errors[] = '$user_id is not numeric';
-			return $this->errors;
+			return;
 		}
 
 		$this->user_id = (int) $user_id;
@@ -206,22 +206,22 @@ class Wolly_Bbp_Private_Groups_Adds{
 
 		if ( ! is_string( $group ) ){
 			$this->errors[] = '$group is not a string';
-			return $this->errors;
+			return;
 		}
 
 		if ( 6 > strlen( $group ) ){
 			$this->errors[] = '$group is too short';
-			return $this->errors;
+			return;
 		}
 
 		if ( substr( strtolower( $group ), 0, 5 ) != $this->group_prefix ){
 			$this->errors[] = '$group prefix is not group';
-			return $this->errors;
+			return;
 		}
 
 		if ( ! is_numeric( substr( $group, 5 ) ) ){
 			$this->errors[] = '$group suffix is not numeric';
-			return $this->errors;
+			return;
 		}
 
 		$this->group = strtolower( $group );
