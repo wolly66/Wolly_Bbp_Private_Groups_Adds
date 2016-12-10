@@ -30,11 +30,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Wolly_Bbp_Private_Groups_Adds{
 
-	var $user_id = '';
-	var $group = '';
-	var $group_prefix = '';
-	var $user_meta_name = '';
-	var $errors = array();
+	private $user_id = '';
+	private $group = '';
+	private $group_prefix = '';
+	private $user_meta_name = '';
+	private $errors = array();
 
 
 	/**
